@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+    <script src="https://unpkg.com/@zxing/browser@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body class="has-background-light">
+    <div class="container is-flex is-flex-direction-column is-align-items-center is-justify-content-space-between" style="height: 100vh; padding: 10px;">
+        
+        <!-- Camera Preview & Scanned Image -->
+        <div class="columns is-gapless is-mobile" style="width: 100%;">
+            <div class="column is-half">
+                <div class="box is-flex is-justify-content-center is-align-items-center" style="aspect-ratio: 1 / 1;">
+                    <video id="video" autoplay playsinline class="is-fullwidth"></video>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box is-flex is-justify-content-center is-align-items-center" style="aspect-ratio: 1 / 1;">
+                    <img id="capturedImage" class="is-hidden">
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanned Result -->
+        <div id="scanResult" class="box is-flex is-justify-content-center is-align-items-center has-text-centered is-size-5 has-text-weight-bold" style="flex-grow: 1; width: 100%;">
+            RESULT
+        </div>
+
+        <!-- Scan Button -->
+        <button id="scanButton" class="button is-primary is-fullwidth" style="height: 64px;">
+            SCAN
+        </button>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const scanButton = document.getElementById('scanButton');
+        const scanResult = document.getElementById('scanResult');
+        const capturedImage = document.getElementById('capturedImage');
+
+        async function requestCameraPermission() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = stream;
+            } catch (error) {
+                alert("Camera permission is required.");
+            }
+        }
+
+        async function scanImage() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            capturedImage.src = canvas.toDataURL('image/png');
+            capturedImage.classList.remove("is-hidden");
+
+            const scanner = new ZXing.BrowserQRCodeReader();
+            const result = await scanner.decodeFromImageElement(capturedImage).catch(() => null);
+
+            scanResult.textContent = result ? result.text : "No QR code detected";
+        }
+
+        scanButton.addEventListener("click", scanImage);
+
+        document.addEventListener("DOMContentLoaded", requestCameraPermission);
+    </script>
+</body>
+</html>
