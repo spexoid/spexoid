@@ -1,0 +1,13 @@
+{
+    "name": "qr",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@tailwindcss/vite": "^4.0.12",
+        "tailwindcss": "^4.0.12"
+    },
+    "scripts": {
+        "dev": "npx @tailwindcss/cli -i ./src/style.css -o ./dist/style.css --watch"
+    }
+}
