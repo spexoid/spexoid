@@ -6,7 +6,8 @@ window.dqsa = (e) => document.querySelectorAll(e);
 const video = dqs("#video");
 const canvas = dqs("#canvas");
 const result = dqs("#result");
-const button = dqs("#button");
+const scanbtn = dqs("#scanbtn");
+const switchbtn = dqs("#switchbtn");
 
 document.addEventListener("DOMContentLoaded", (e) => {
     navigator.mediaDevices
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
         });
 });
 
-button.addEventListener("click", (e) => {
+scanbtn.addEventListener("click", (e) => {
     const context = canvas.getContext("2d");
     const width = video.videoWidth;
     const height = video.videoHeight;
@@ -45,4 +46,20 @@ button.addEventListener("click", (e) => {
     } else {
         result.textContent = "No QR code found";
     }
+});
+
+switchbtn.addEventListener("click", (e) => {
+    const tracks = video.srcObject.getTracks();
+    tracks.forEach((track) => {
+        if (track.kind === "video") {
+            track.getSources().then((sources) => {
+                const newSourceId = sources.find(
+                    (source) => source.id !== track.getSettings().sourceId
+                ).id;
+                track.applyConstraints({
+                    advanced: [{ sourceId: newSourceId }],
+                });
+            });
+        }
+    });
 });
