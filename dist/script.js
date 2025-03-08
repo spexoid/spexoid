@@ -51,6 +51,7 @@ scanbtn.addEventListener("click", (e) => {
 switchbtn.addEventListener("click", (e) => {
     const tracks = video.srcObject.getTracks();
     tracks.forEach((track) => {
+        result.textContent += "t";
         if (track.kind === "video") {
             track.getSources().then((sources) => {
                 const newSourceId = sources.find(
