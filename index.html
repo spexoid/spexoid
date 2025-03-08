@@ -13,13 +13,13 @@
         <!-- Camera Preview & Scanned Image -->
         <div class="columns is-gapless is-mobile" style="width: 100%;">
             <div class="column is-half">
-                <div class="box is-flex is-justify-content-center is-align-items-center" style="aspect-ratio: 1 / 1;">
-                    <video id="video" autoplay playsinline class="is-fullwidth"></video>
+                <div class="box is-flex is-justify-content-center is-align-items-center" style="aspect-ratio: 1 / 1; overflow: hidden;">
+                    <video id="video" autoplay playsinline class="is-fullwidth" style="object-fit: cover; width: 100%; height: 100%;"></video>
                 </div>
             </div>
             <div class="column is-half">
                 <div class="box is-flex is-justify-content-center is-align-items-center" style="aspect-ratio: 1 / 1;">
-                    <img id="capturedImage" class="is-hidden">
+                    <canvas id="canvas"></canvas>
                 </div>
             </div>
         </div>
@@ -27,6 +27,11 @@
         <!-- Scanned Result -->
         <div id="scanResult" class="box is-flex is-justify-content-center is-align-items-center has-text-centered is-size-5 has-text-weight-bold" style="flex-grow: 1; width: 100%;">
             RESULT
+        </div>
+
+        <!-- Thumbnail History -->
+        <div id="historyContainer" class="is-flex" style="width: 100%; gap: 5px; overflow-x: auto;">
+            <!-- Thumbnails will be added here -->
         </div>
 
         <!-- Scan Button -->
@@ -39,7 +44,9 @@
         const video = document.getElementById('video');
         const scanButton = document.getElementById('scanButton');
         const scanResult = document.getElementById('scanResult');
-        const capturedImage = document.getElementById('capturedImage');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const historyContainer = document.getElementById('historyContainer');
 
         async function requestCameraPermission() {
             try {
@@ -51,23 +58,35 @@
         }
 
         async function scanImage() {
-            const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            capturedImage.src = canvas.toDataURL('image/png');
-            capturedImage.classList.remove("is-hidden");
 
             const scanner = new ZXing.BrowserQRCodeReader();
-            const result = await scanner.decodeFromImageElement(capturedImage).catch(() => null);
+            try {
+                const result = await scanner.decodeFromCanvas(canvas);
+                scanResult.textContent = result.text;
+                addToHistory();
+            } catch {
+                scanResult.textContent = "No QR code detected";
+            }
+        }
 
-            scanResult.textContent = result ? result.text : "No QR code detected";
+        function addToHistory() {
+            const img = document.createElement("img");
+            img.src = canvas.toDataURL("image/png");
+            img.style.width = "64px";
+            img.style.height = "64px";
+            img.style.objectFit = "cover";
+            img.classList.add("box");
+
+            historyContainer.prepend(img);
+            if (historyContainer.children.length > 3) {
+                historyContainer.removeChild(historyContainer.lastChild);
+            }
         }
 
         scanButton.addEventListener("click", scanImage);
-
         document.addEventListener("DOMContentLoaded", requestCameraPermission);
     </script>
 </body>
