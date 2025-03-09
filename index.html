@@ -42,18 +42,57 @@
             >
                 CLICK SCAN TO GET STARTED
             </div>
+            <select name="" class="p-4 border" id="cameralist"></select>
             <div class="flex gap-4">
                 <button
-                    class="flex cursor-pointer text-base font-medium uppercase justify-center items-center bg-violet-500 hover:bg-violet-600 text-white rounded-xl h-16 flex-[2]"
+                    class="flex cursor-pointer text-base font-medium uppercase justify-center items-center bg-violet-500 hover:bg-violet-600 text-white rounded-xl h-16 flex-1"
                     id="scanbtn"
                 >
                     SCAN
                 </button>
                 <button
-                    class="flex cursor-pointer text-base font-medium uppercase justify-center items-center bg-violet-500 hover:bg-violet-600 text-white rounded-xl h-16 flex-1"
+                    class="flex cursor-pointer text-base font-medium uppercase justify-center items-center bg-violet-500 hover:bg-violet-600 text-white rounded-xl h-16 w-16"
                     id="switchbtn"
                 >
-                    SWITCH
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-refresh"
+                    >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                    </svg>
+                </button>
+                <button
+                    class="flex cursor-pointer text-base font-medium uppercase justify-center items-center bg-violet-500 hover:bg-violet-600 text-white rounded-xl h-16 w-16"
+                    id="fullscreenbtn"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-maximize"
+                    >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+                    </svg>
                 </button>
             </div>
         </section>

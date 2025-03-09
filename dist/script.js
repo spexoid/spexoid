@@ -8,8 +8,26 @@ const canvas = dqs("#canvas");
 const result = dqs("#result");
 const scanbtn = dqs("#scanbtn");
 const switchbtn = dqs("#switchbtn");
+const fullscreenbtn = dqs("#fullscreenbtn");
+const cameralist = dqs("#cameralist");
 
 document.addEventListener("DOMContentLoaded", (e) => {
+    navigator.mediaDevices
+        .enumerateDevices()
+        .then((devices) => {
+            devices.forEach((device) => {
+                if (device.kind === "videoinput") {
+                    const option = document.createElement("option");
+                    option.value = device.deviceId;
+                    option.textContent =
+                        device.label || `Camera ${cameralist.length + 1}`;
+                    cameralist.appendChild(option);
+                }
+            });
+        })
+        .catch((err) => {
+            console.error("Error enumerating devices: ", err);
+        });
     navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
@@ -63,4 +81,13 @@ switchbtn.addEventListener("click", (e) => {
             });
         }
     });
+});
+
+fullscreenbtn.addEventListener("click", (e) => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        // make window fullscreen
+        document.documentElement.requestFullscreen();
+    }
 });
